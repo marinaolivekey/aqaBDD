@@ -44,7 +44,7 @@ public class MoneyTransferTest {
         dashboardPage = transferPage.makeValidTransfer(String.valueOf(amount), firstCardInfo);
         dashboardPage.reloadDashboardPage();
 
-        var actualBalanceFirstCard = dashboardPage.getCardBalance(firstCardInfo.getCardNumber());
+        var actualBalanceFirstCard = dashboardPage.getCardBalance(0);
         var actualBalanceSecondCard = dashboardPage.getCardBalance(1);
 
         assertAll(()->assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard),
