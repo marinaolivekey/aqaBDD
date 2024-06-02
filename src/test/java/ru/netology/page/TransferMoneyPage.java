@@ -33,6 +33,5 @@ public class TransferMoneyPage {
 
     public void findErrorMessage (String expectedText) {
         errorMessage.shouldHave(Condition.text(expectedText), Duration.ofSeconds(15)).shouldBe(Condition.visible);
-
     }
 }

@@ -44,7 +44,7 @@ public class MoneyTransferTest {
         dashboardPage = transferPage.makeValidTransfer(String.valueOf(amount), firstCardInfo);
         dashboardPage.reloadDashboardPage();
 
-        var actualBalanceFirstCard = dashboardPage.getCardBalance(0);
+        var actualBalanceFirstCard = dashboardPage.getCardBalance(getMaskedNumber(firstCardInfo.getCardNumber()));
         var actualBalanceSecondCard = dashboardPage.getCardBalance(1);
 
         assertAll(()->assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard),
@@ -59,11 +59,18 @@ public class MoneyTransferTest {
         transferPage.findErrorMessage("Выполнена попытка перевода суммы, превышающей остаток на карте списания");
         dashboardPage.reloadDashboardPage();
 
-        var actualBalanceFirstCard = dashboardPage.getCardBalance(firstCardInfo.getCardNumber());
-        var actualBalanceSecondCard = dashboardPage.getCardBalance(secondCardInfo.getCardNumber());
+        var actualBalanceFirstCard = dashboardPage.getCardBalance(getMaskedNumber(firstCardInfo.getCardNumber()));
+        var actualBalanceSecondCard = dashboardPage.getCardBalance(getMaskedNumber(secondCardInfo.getCardNumber()));
 
         assertAll(()->assertEquals(firstCardBalance, actualBalanceFirstCard),
                 ()->assertEquals(secondCardBalance, actualBalanceSecondCard));
     }
 
+    @Test
+    void shouldGetErrorMessageIfCardFromNotExist(){
+        var amount = generateValidAmount(firstCardBalance);
+        var transferPage = dashboardPage.selectCardToTransfer(secondCardInfo);
+        transferPage.makeTransfer(String.valueOf(amount), getInvalidCardInfo());
+        transferPage.findErrorMessage("Ошибка! Произошла ошибка");
+    }
 }
