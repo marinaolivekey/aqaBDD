@@ -52,6 +52,23 @@ public class MoneyTransferTest {
     }
 
     @Test
+    void shouldTransferCard2ToCard1(){
+        var amount = generateValidAmount(secondCardBalance);
+        var expectedBalanceSecondCard = secondCardBalance - amount;
+        var expectedBalanceFirstCard = firstCardBalance + amount;
+
+        var transferPage = dashboardPage.selectCardToTransfer(firstCardInfo);
+        dashboardPage = transferPage.makeValidTransfer(String.valueOf(amount), secondCardInfo);
+        dashboardPage.reloadDashboardPage();
+
+        var actualBalanceFirstCard = dashboardPage.getCardBalance(getMaskedNumber(firstCardInfo.getCardNumber()));
+        var actualBalanceSecondCard = dashboardPage.getCardBalance(1);
+
+        assertAll(()->assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard),
+                ()->assertEquals(expectedBalanceSecondCard, actualBalanceSecondCard));
+    }
+
+    @Test
     void shouldGetErrorMessageIfAmountMoreBalance(){
         var amount = generateInvalidAmount(secondCardBalance);
         var transferPage = dashboardPage.selectCardToTransfer(firstCardInfo);
